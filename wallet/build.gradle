@@ -65,7 +65,7 @@ android {
         dev {
             dimension 'flavor'
         }
-        prod {
+        wallet {
             dimension 'flavor'
         }
     }
@@ -77,7 +77,7 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
-        prod {
+        wallet {
             res.srcDirs = ['res-prod']
             assets.srcDirs = ['assets-prod']
         }
