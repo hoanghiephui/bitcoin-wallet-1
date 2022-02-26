@@ -11,3 +11,5 @@ local.properties
 *.iml
 bin/
 gen/
+/wallet/graphics-prod/.DS_Store
+/wallet/graphics/.DS_Store

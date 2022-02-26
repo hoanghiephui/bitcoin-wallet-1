@@ -1,6 +1,5 @@
 plugins {
-    id 'com.android.application'
-    id 'androidsvgdrawable'
+    id 'com.android.library'
 }
 
 configurations {
@@ -11,16 +10,16 @@ configurations {
 dependencies {
     implementation project(':integration-android')
     implementation 'androidx.annotation:annotation:1.3.0'
-    implementation 'androidx.core:core:1.6.0'
-    implementation 'androidx.fragment:fragment:1.3.6'
+    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.fragment:fragment:1.4.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-service:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-service:2.4.1'
     implementation 'androidx.sqlite:sqlite:2.2.0'
-    implementation "androidx.room:room-runtime:2.4.0"
-    annotationProcessor "androidx.room:room-compiler:2.4.0"
+    implementation "androidx.room:room-runtime:2.4.2"
+    annotationProcessor "androidx.room:room-compiler:2.4.2"
     implementation 'org.bitcoinj:bitcoinj-core:0.16.1'
     implementation 'com.google.guava:guava:31.0.1-android'
     implementation 'com.google.zxing:core:3.4.1'
@@ -35,15 +34,16 @@ dependencies {
 }
 
 ext {
-    archivesBaseName = 'bitcoin-wallet'
+    //archivesBaseName = 'bitcoin-wallet'
 }
 
 android {
-    compileSdkVersion 'android-30'
-    buildToolsVersion '30.0.3'
+    compileSdk 31
+    //buildToolsVersion '30.0.3'
 
     defaultConfig {
-        applicationId 'de.schildbach'
+        minSdk 24
+        targetSdk 31
         dexOptions {
             preDexLibraries false
         }
@@ -64,11 +64,9 @@ android {
     productFlavors {
         dev {
             dimension 'flavor'
-            applicationIdSuffix '.wallet_test'
         }
         prod {
             dimension 'flavor'
-            applicationIdSuffix '.wallet'
         }
     }
 
@@ -111,20 +109,4 @@ android {
         exclude 'org.bitcoin.production.checkpoints.txt'
         exclude 'org.bitcoin.test.checkpoints.txt'
     }
-}
-
-task svgToPngMipmap(type: fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask) {
-    from = files('graphics/mipmap')
-    to = file('res')
-    targetedDensities = ['xxhdpi', 'xxxhdpi']
-    outputFormat = 'PNG'
-    outputType = 'mipmap'
-}
-
-task svgToPngMipmapProd(type: fr.avianey.androidsvgdrawable.gradle.SvgDrawableTask) {
-    from = files('graphics-prod/mipmap')
-    to = file('res-prod')
-    targetedDensities = ['xxhdpi', 'xxxhdpi']
-    outputFormat = 'PNG'
-    outputType = 'mipmap'
 }
