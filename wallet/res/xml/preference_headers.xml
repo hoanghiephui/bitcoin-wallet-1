@@ -8,7 +8,7 @@
     <header
         android:fragment="de.schildbach.wallet.ui.preference.DiagnosticsFragment"
         android:title="@string/preferences_category_diagnostics" />
-    <header
+    <!--<header
         android:fragment="de.schildbach.wallet.ui.preference.AboutFragment"
-        android:title="@string/about_title" />
+        android:title="@string/about_title" />-->
 </preference-headers>

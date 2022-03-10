@@ -150,8 +150,8 @@ public class AlertDialogsFragment extends Fragment {
             }
         });
 
-        if (savedInstanceState == null)
-            process();
+        /*if (savedInstanceState == null)
+            process();*/
     }
 
     private void process() {

@@ -37,6 +37,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.Process;
 import android.text.format.DateUtils;
 import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -222,6 +223,7 @@ public class BlockchainService extends LifecycleService {
         summaryNotification.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN);
         summaryNotification.setWhen(System.currentTimeMillis());
         summaryNotification.setSmallIcon(R.drawable.stat_notify_received_24dp);
+        summaryNotification.setColor(ContextCompat.getColor(this, R.color.appicon_gradient_end));
         summaryNotification.setContentTitle(
                 getString(R.string.notification_coins_received_msg, btcFormat.format(notificationAccumulatedAmount))
                         + msgSuffix);
@@ -422,7 +424,7 @@ public class BlockchainService extends LifecycleService {
                     stopSelf();
             };
 
-    private Runnable delayedStopSelfRunnable = () -> {
+    private final Runnable delayedStopSelfRunnable = () -> {
         log.info("service idling detected, trying to stop");
         stopSelf();
         if (isBound.get())
@@ -450,7 +452,7 @@ public class BlockchainService extends LifecycleService {
     private final IBinder mBinder = new LocalBinder();
 
     @Override
-    public IBinder onBind(final Intent intent) {
+    public IBinder onBind(@NonNull final Intent intent) {
         log.info("onBind: {}", intent);
         super.onBind(intent);
         isBound.set(true);
@@ -601,7 +603,7 @@ public class BlockchainService extends LifecycleService {
 
             private void startup() {
                 final Wallet wallet = BlockchainService.this.wallet.getValue();
-
+                if (wallet == null) return;
                 // consistency check
                 final int walletLastBlockSeenHeight = wallet.getLastBlockSeenHeight();
                 final int bestChainHeight = blockChain.getBestChainHeight();
@@ -672,11 +674,13 @@ public class BlockchainService extends LifecycleService {
             private void shutdown() {
                 final Wallet wallet = BlockchainService.this.wallet.getValue();
 
-                peerGroup.removeDisconnectedEventListener(peerConnectivityListener);
-                peerGroup.removeConnectedEventListener(peerConnectivityListener);
-                peerGroup.removeWallet(wallet);
-                log.info("stopping {} asynchronously", peerGroup);
-                peerGroup.stopAsync();
+                if (peerGroup != null) {
+                    peerGroup.removeDisconnectedEventListener(peerConnectivityListener);
+                    peerGroup.removeConnectedEventListener(peerConnectivityListener);
+                    peerGroup.removeWallet(wallet);
+                    log.info("stopping {} asynchronously", peerGroup);
+                    peerGroup.stopAsync();
+                }
                 peerGroup = null;
             }
         });
@@ -841,6 +845,7 @@ public class BlockchainService extends LifecycleService {
             connectivityNotification.setSmallIcon(R.drawable.stat_notify_peers, Math.min(numPeers, 4));
             connectivityNotification.setContentText(getString(R.string.notification_peers_connected_msg, numPeers));
         }
+        connectivityNotification.setColor(ContextCompat.getColor(this, R.color.appicon_gradient_end));
         startForeground(Constants.NOTIFICATION_ID_CONNECTIVITY, connectivityNotification.build());
     }
 
