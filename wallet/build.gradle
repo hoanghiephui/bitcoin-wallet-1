@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'kotlin-android'
 }
 
 configurations {
@@ -31,6 +32,10 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'com.github.tony19:logback-android:2.0.0'
     testImplementation 'junit:junit:4.13.2'
+    api project(path: ':ads')
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api 'com.applovin:applovin-sdk:11.3.0'
 }
 
 ext {
@@ -108,5 +113,9 @@ android {
         exclude 'org/bitcoinj/crypto/cacerts'
         exclude 'org.bitcoin.production.checkpoints.txt'
         exclude 'org.bitcoin.test.checkpoints.txt'
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }

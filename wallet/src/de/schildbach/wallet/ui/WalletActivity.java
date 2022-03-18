@@ -37,11 +37,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.ads.AdFullCallback;
+import com.ads.AdMaxFullLoader;
+import com.ads.BuildConfig;
 import com.google.common.primitives.Floats;
+
+import org.bitcoinj.core.PrefixedChecksummedBytes;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.VerificationException;
+import org.bitcoinj.script.Script;
+
 import de.schildbach.wallet.Configuration;
 import de.schildbach.wallet.Constants;
 import de.schildbach.wallet.R;
@@ -60,15 +71,11 @@ import de.schildbach.wallet.ui.send.SweepWalletActivity;
 import de.schildbach.wallet.util.CrashReporter;
 import de.schildbach.wallet.util.Nfc;
 import de.schildbach.wallet.util.OnFirstPreDraw;
-import org.bitcoinj.core.PrefixedChecksummedBytes;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.VerificationException;
-import org.bitcoinj.script.Script;
 
 /**
  * @author Andreas Schildbach
  */
-public final class WalletActivity extends AbstractWalletActivity {
+public final class WalletActivity extends AbstractWalletActivity implements AdFullCallback {
     private WalletApplication application;
     private Configuration config;
 
@@ -83,6 +90,7 @@ public final class WalletActivity extends AbstractWalletActivity {
     private WalletActivityViewModel viewModel;
 
     private static final int REQUEST_CODE_SCAN = 0;
+    private final AdMaxFullLoader adMaxFullLoader = new AdMaxFullLoader(this);
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -182,15 +190,17 @@ public final class WalletActivity extends AbstractWalletActivity {
             viewModel.animationFinished();
 
         if (savedInstanceState == null && CrashReporter.hasSavedCrashTrace())
-            viewModel.showReportCrashDialog.setValue(Event.simple());
+            //viewModel.showReportCrashDialog.setValue(Event.simple());
 
-        config.touchLastUsed();
+            config.touchLastUsed();
 
         handleIntent(getIntent());
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         MaybeMaintenanceFragment.add(fragmentManager);
         AlertDialogsFragment.add(fragmentManager);
+        adMaxFullLoader.createInterstitialAd(this, BuildConfig.WALLET_HOME_FULL);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -480,17 +490,37 @@ public final class WalletActivity extends AbstractWalletActivity {
         ScanActivity.startForResult(this, clickView, WalletActivity.REQUEST_CODE_SCAN);
     }
 
+    @Override
+    public void onAdFullLoaded() {
+        adMaxFullLoader.showAdsFull();
+    }
+
+    @Override
+    public void onLoadAdFullFail() {
+
+    }
+
+    @Override
+    public void onAdFullDisplay() {
+
+    }
+
+    @Override
+    public void onAdHide() {
+
+    }
+
     private static final class QuickReturnBehavior extends CoordinatorLayout.Behavior<View> {
         @Override
         public boolean onStartNestedScroll(final CoordinatorLayout coordinatorLayout, final View child,
-                final View directTargetChild, final View target, final int nestedScrollAxes, final int type) {
+                                           final View directTargetChild, final View target, final int nestedScrollAxes, final int type) {
             return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
         }
 
         @Override
         public void onNestedScroll(final CoordinatorLayout coordinatorLayout, final View child, final View target,
-                final int dxConsumed, final int dyConsumed, final int dxUnconsumed, final int dyUnconsumed,
-                final int type) {
+                                   final int dxConsumed, final int dyConsumed, final int dxUnconsumed, final int dyUnconsumed,
+                                   final int type) {
             child.setTranslationY(Floats.constrainToRange(child.getTranslationY() - dyConsumed, -child.getHeight(), 0));
         }
     }
