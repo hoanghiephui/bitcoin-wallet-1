@@ -44,6 +44,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ShareCompat;
@@ -51,6 +52,17 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.ads.AdMaxNativeLoader;
+import com.ads.AdsView;
+import com.applovin.mediation.nativeAds.MaxNativeAdView;
+
+import org.bitcoinj.core.Address;
+import org.bitcoinj.protocols.payments.PaymentProtocol;
+import org.bitcoinj.script.Script;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.schildbach.wallet.Configuration;
 import de.schildbach.wallet.Constants;
 import de.schildbach.wallet.R;
@@ -60,11 +72,8 @@ import de.schildbach.wallet.ui.send.SendCoinsActivity;
 import de.schildbach.wallet.util.Bluetooth;
 import de.schildbach.wallet.util.Nfc;
 import de.schildbach.wallet.util.Toast;
-import org.bitcoinj.core.Address;
-import org.bitcoinj.protocols.payments.PaymentProtocol;
-import org.bitcoinj.script.Script;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * @author Andreas Schildbach
@@ -92,6 +101,8 @@ public final class RequestCoinsFragment extends Fragment {
     private RequestCoinsViewModel viewModel;
 
     private static final Logger log = LoggerFactory.getLogger(RequestCoinsFragment.class);
+    private final AdMaxNativeLoader adMaxNativeLoader = new AdMaxNativeLoader();
+    private AdsView adsView;
 
     @Override
     public void onAttach(final Context context) {
@@ -153,7 +164,7 @@ public final class RequestCoinsFragment extends Fragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.request_coins_fragment, container, false);
 
         qrView = view.findViewById(R.id.request_coins_qr);
@@ -197,7 +208,7 @@ public final class RequestCoinsFragment extends Fragment {
         });
 
         initiateRequestView = view.findViewById(R.id.request_coins_fragment_initiate_request);
-
+        adsView = view.findViewById(R.id.adView);
         return view;
     }
 
@@ -207,6 +218,15 @@ public final class RequestCoinsFragment extends Fragment {
 
         amountCalculatorLink.setExchangeDirection(config.getLastExchangeDirection());
         amountCalculatorLink.requestFocus();
+        if (getContext() != null) {
+            adMaxNativeLoader.createNativeAdLoader(getContext(), "0afabecda475efbc", false, false, maxNativeAdView -> {
+                adsView.loadAdsSuccess(maxNativeAdView, false);
+                return null;
+            }, s -> {
+                adsView.loadAdsSuccess(null, false);
+                return null;
+            });
+        }
     }
 
     @Override
@@ -369,7 +389,7 @@ public final class RequestCoinsFragment extends Fragment {
     private static NdefMessage createNdefMessage(final byte[] paymentRequest) {
         if (paymentRequest != null)
             return new NdefMessage(
-                    new NdefRecord[] { Nfc.createMime(PaymentProtocol.MIMETYPE_PAYMENTREQUEST, paymentRequest) });
+                    new NdefRecord[]{Nfc.createMime(PaymentProtocol.MIMETYPE_PAYMENTREQUEST, paymentRequest)});
         else
             return null;
     }

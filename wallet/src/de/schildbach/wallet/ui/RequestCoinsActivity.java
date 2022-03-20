@@ -24,6 +24,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.ads.AdFullCallback;
+import com.ads.AdMaxFullLoader;
+import com.ads.BuildConfig;
+
 import de.schildbach.wallet.R;
 import org.bitcoinj.script.Script;
 import org.slf4j.Logger;
@@ -32,7 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Andreas Schildbach
  */
-public final class RequestCoinsActivity extends AbstractWalletActivity {
+public final class RequestCoinsActivity extends AbstractWalletActivity implements AdFullCallback {
     public static final String INTENT_EXTRA_OUTPUT_SCRIPT_TYPE = "output_script_type";
 
     public static void start(final Context context) {
@@ -49,7 +54,7 @@ public final class RequestCoinsActivity extends AbstractWalletActivity {
     private RequestCoinsActivityViewModel viewModel;
 
     private static final Logger log = LoggerFactory.getLogger(RequestCoinsActivity.class);
-
+    private final AdMaxFullLoader adMaxFullLoader = new AdMaxFullLoader(this);
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +68,7 @@ public final class RequestCoinsActivity extends AbstractWalletActivity {
                 HelpDialogFragment.page(getSupportFragmentManager(), messageResId);
             }
         });
+        adMaxFullLoader.createInterstitialAd(this, "1ce78fea0aa45f5c");
     }
 
     @Override
@@ -84,5 +90,31 @@ public final class RequestCoinsActivity extends AbstractWalletActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        adMaxFullLoader.showAdsFull();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onAdFullLoaded() {
+
+    }
+
+    @Override
+    public void onLoadAdFullFail() {
+
+    }
+
+    @Override
+    public void onAdFullDisplay() {
+
+    }
+
+    @Override
+    public void onAdHide() {
+
     }
 }

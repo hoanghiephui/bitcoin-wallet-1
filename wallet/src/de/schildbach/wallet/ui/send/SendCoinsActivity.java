@@ -24,6 +24,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.ads.AdMaxFullLoader;
+
 import de.schildbach.wallet.Constants;
 import de.schildbach.wallet.R;
 import de.schildbach.wallet.data.PaymentIntent;
@@ -66,7 +69,7 @@ public final class SendCoinsActivity extends AbstractWalletActivity {
     }
 
     private SendCoinsActivityViewModel viewModel;
-
+    private final AdMaxFullLoader adMaxFullLoader = new AdMaxFullLoader();
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +85,7 @@ public final class SendCoinsActivity extends AbstractWalletActivity {
         });
 
         BlockchainService.start(this, false);
+        adMaxFullLoader.createInterstitialAd(this, "053e1ef4cd0183bb");
     }
 
     @Override
@@ -98,5 +102,11 @@ public final class SendCoinsActivity extends AbstractWalletActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        adMaxFullLoader.showAdsFull();
+        super.onBackPressed();
     }
 }
