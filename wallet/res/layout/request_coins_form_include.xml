@@ -63,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:visibility="gone"
         android:paddingLeft="@dimen/list_entry_padding_horizontal_lax"
         android:paddingRight="@dimen/list_entry_padding_horizontal_lax"
         android:text="@string/request_coins_fragment_accept_bluetooth_payment" />

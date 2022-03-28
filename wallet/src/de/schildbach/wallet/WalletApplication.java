@@ -117,11 +117,11 @@ public class WalletApplication extends Application {
 
         walletFile = getFileStreamPath(Constants.Files.WALLET_FILENAME_PROTOBUF);
 
-        final Configuration config = getConfiguration();
+        /*final Configuration config = getConfiguration();
         config.updateLastVersionCode(packageInfo.versionCode);
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter != null)
-            config.updateLastBluetoothAddress(Bluetooth.getAddress(bluetoothAdapter));
+            config.updateLastBluetoothAddress(Bluetooth.getAddress(bluetoothAdapter));*/
 
         cleanupFiles();
 

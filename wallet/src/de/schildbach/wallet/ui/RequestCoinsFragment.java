@@ -186,7 +186,7 @@ public final class RequestCoinsFragment extends Fragment {
         localAmountView.setVisibility(config.isEnableExchangeRates() ? View.VISIBLE : View.GONE);
         amountCalculatorLink = new CurrencyCalculatorLink(btcAmountView, localAmountView);
 
-        final BluetoothAdapter bluetoothAdapter = this.bluetoothAdapter;
+        /*final BluetoothAdapter bluetoothAdapter = this.bluetoothAdapter;
         acceptBluetoothPaymentView = view.findViewById(R.id.request_coins_accept_bluetooth_payment);
         acceptBluetoothPaymentView.setVisibility(
                 bluetoothAdapter != null &&
@@ -205,7 +205,7 @@ public final class RequestCoinsFragment extends Fragment {
             } else {
                 stopBluetoothListening();
             }
-        });
+        });*/
 
         initiateRequestView = view.findViewById(R.id.request_coins_fragment_initiate_request);
         adsView = view.findViewById(R.id.adView);
@@ -247,9 +247,9 @@ public final class RequestCoinsFragment extends Fragment {
             }
         });
 
-        final BluetoothAdapter bluetoothAdapter = this.bluetoothAdapter;
+        /*final BluetoothAdapter bluetoothAdapter = this.bluetoothAdapter;
         if (bluetoothAdapter != null && bluetoothAdapter.isEnabled() && acceptBluetoothPaymentView.isChecked())
-            maybeStartBluetoothListening();
+            maybeStartBluetoothListening();*/
     }
 
     @Override

@@ -40,7 +40,7 @@ import java.util.Set;
  * @author Andreas Schildbach
  */
 public class Configuration {
-    public final int lastVersionCode;
+    public int lastVersionCode;
 
     private final SharedPreferences prefs;
     private final Resources res;
@@ -81,7 +81,11 @@ public class Configuration {
         this.prefs = prefs;
         this.res = res;
 
-        this.lastVersionCode = prefs.getInt(PREFS_KEY_LAST_VERSION, 0);
+        try {
+            this.lastVersionCode = prefs.getInt(PREFS_KEY_LAST_VERSION, 0);
+        } catch (Exception exception) {
+            this.lastVersionCode = 90;
+        }
     }
 
     private int getBtcPrecision() {
