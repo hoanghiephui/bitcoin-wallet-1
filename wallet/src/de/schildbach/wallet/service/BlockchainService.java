@@ -17,6 +17,8 @@
 
 package de.schildbach.wallet.service;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -155,11 +157,14 @@ public class BlockchainService extends LifecycleService {
     private static final Logger log = LoggerFactory.getLogger(BlockchainService.class);
 
     public static void start(final Context context, final boolean cancelCoinsReceived) {
-        if (cancelCoinsReceived)
-            ContextCompat.startForegroundService(context,
-                    new Intent(BlockchainService.ACTION_CANCEL_COINS_RECEIVED, null, context, BlockchainService.class));
-        else
-            ContextCompat.startForegroundService(context, new Intent(context, BlockchainService.class));
+        try {
+            if (cancelCoinsReceived)
+                ContextCompat.startForegroundService(context,
+                        new Intent(BlockchainService.ACTION_CANCEL_COINS_RECEIVED, null, context, BlockchainService.class));
+            else
+                ContextCompat.startForegroundService(context, new Intent(context, BlockchainService.class));
+        } catch (RuntimeException ignored) {}
+
     }
 
     public static void resetBlockchain(final Context context) {
@@ -239,7 +244,7 @@ public class BlockchainService extends LifecycleService {
             summaryNotification.setContentText(text);
         }
         summaryNotification
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, WalletActivity.class), 0));
+                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, WalletActivity.class), FLAG_IMMUTABLE));
         nm.notify(Constants.NOTIFICATION_ID_COINS_RECEIVED, summaryNotification.build());
 
         // child notification
@@ -262,7 +267,7 @@ public class BlockchainService extends LifecycleService {
                 childNotification.setContentText(addressStr);
         }
         childNotification
-                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, WalletActivity.class), 0));
+                .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, WalletActivity.class), FLAG_IMMUTABLE));
         childNotification.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.coins_received));
         nm.notify(transactionHash.toString(), Constants.NOTIFICATION_ID_COINS_RECEIVED, childNotification.build());
     }
@@ -487,7 +492,7 @@ public class BlockchainService extends LifecycleService {
                 R.string.notification_connectivity_syncing_trusted_peer :
                 R.string.notification_connectivity_syncing_message));
         connectivityNotification.setContentIntent(PendingIntent.getActivity(BlockchainService.this, 0,
-                new Intent(BlockchainService.this, WalletActivity.class), 0));
+                new Intent(BlockchainService.this, WalletActivity.class), FLAG_IMMUTABLE));
         connectivityNotification.setWhen(System.currentTimeMillis());
         connectivityNotification.setOngoing(true);
         connectivityNotification.setPriority(NotificationCompat.PRIORITY_LOW);

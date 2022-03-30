@@ -169,49 +169,53 @@ public class WalletApplication extends Application {
 
             @WorkerThread
             private void loadWalletFromProtobuf() {
-                Wallet wallet;
-                if (walletFile.exists()) {
-                    try (final FileInputStream walletStream = new FileInputStream(walletFile)) {
-                        final Stopwatch watch = Stopwatch.createStarted();
-                        wallet = new WalletProtobufSerializer().readWallet(walletStream);
-                        watch.stop();
+                try {
+                    Wallet wallet;
+                    if (walletFile.exists()) {
+                        try (final FileInputStream walletStream = new FileInputStream(walletFile)) {
+                            final Stopwatch watch = Stopwatch.createStarted();
+                            wallet = new WalletProtobufSerializer().readWallet(walletStream);
+                            watch.stop();
+
+                            if (!wallet.getParams().equals(Constants.NETWORK_PARAMETERS))
+                                throw new UnreadableWalletException(
+                                        "bad wallet network parameters: " + wallet.getParams().getId());
+
+                            log.info("wallet loaded from: '{}', took {}", walletFile, watch);
+                        } catch (final IOException | UnreadableWalletException x) {
+                            log.warn("problem loading wallet, auto-restoring: " + walletFile, x);
+                            wallet = WalletUtils.restoreWalletFromAutoBackup(WalletApplication.this);
+                            if (wallet != null)
+                                new Toast(WalletApplication.this).postLongToast(R.string.toast_wallet_reset);
+                        }
+                        if (!wallet.isConsistent()) {
+                            log.warn("inconsistent wallet, auto-restoring: " + walletFile);
+                            wallet = WalletUtils.restoreWalletFromAutoBackup(WalletApplication.this);
+                            if (wallet != null)
+                                new Toast(WalletApplication.this).postLongToast(R.string.toast_wallet_reset);
+                        }
 
                         if (!wallet.getParams().equals(Constants.NETWORK_PARAMETERS))
-                            throw new UnreadableWalletException(
-                                    "bad wallet network parameters: " + wallet.getParams().getId());
+                            throw new Error("bad wallet network parameters: " + wallet.getParams().getId());
 
-                        log.info("wallet loaded from: '{}', took {}", walletFile, watch);
-                    } catch (final IOException | UnreadableWalletException x) {
-                        log.warn("problem loading wallet, auto-restoring: " + walletFile, x);
-                        wallet = WalletUtils.restoreWalletFromAutoBackup(WalletApplication.this);
-                        if (wallet != null)
-                            new Toast(WalletApplication.this).postLongToast(R.string.toast_wallet_reset);
+                        wallet.cleanup();
+                        walletFiles = wallet.autosaveToFile(walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
+                                TimeUnit.MILLISECONDS, null);
+                    } else {
+                        final Stopwatch watch = Stopwatch.createStarted();
+                        wallet = Wallet.createDeterministic(Constants.NETWORK_PARAMETERS,
+                                Constants.DEFAULT_OUTPUT_SCRIPT_TYPE);
+                        walletFiles = wallet.autosaveToFile(walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
+                                TimeUnit.MILLISECONDS, null);
+                        autosaveWalletNow(); // persist...
+                        WalletUtils.autoBackupWallet(WalletApplication.this, wallet); // ...and backup asap
+                        watch.stop();
+                        log.info("fresh {} wallet created, took {}", Constants.DEFAULT_OUTPUT_SCRIPT_TYPE, watch);
+
+                        config.armBackupReminder();
                     }
-                    if (!wallet.isConsistent()) {
-                        log.warn("inconsistent wallet, auto-restoring: " + walletFile);
-                        wallet = WalletUtils.restoreWalletFromAutoBackup(WalletApplication.this);
-                        if (wallet != null)
-                            new Toast(WalletApplication.this).postLongToast(R.string.toast_wallet_reset);
-                    }
+                } catch (Exception ignored) {
 
-                    if (!wallet.getParams().equals(Constants.NETWORK_PARAMETERS))
-                        throw new Error("bad wallet network parameters: " + wallet.getParams().getId());
-
-                    wallet.cleanup();
-                    walletFiles = wallet.autosaveToFile(walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
-                            TimeUnit.MILLISECONDS, null);
-                } else {
-                    final Stopwatch watch = Stopwatch.createStarted();
-                    wallet = Wallet.createDeterministic(Constants.NETWORK_PARAMETERS,
-                            Constants.DEFAULT_OUTPUT_SCRIPT_TYPE);
-                    walletFiles = wallet.autosaveToFile(walletFile, Constants.Files.WALLET_AUTOSAVE_DELAY_MS,
-                            TimeUnit.MILLISECONDS, null);
-                    autosaveWalletNow(); // persist...
-                    WalletUtils.autoBackupWallet(WalletApplication.this, wallet); // ...and backup asap
-                    watch.stop();
-                    log.info("fresh {} wallet created, took {}", Constants.DEFAULT_OUTPUT_SCRIPT_TYPE, watch);
-
-                    config.armBackupReminder();
                 }
             }
 
