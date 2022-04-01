@@ -243,7 +243,7 @@ public final class RequestCoinsFragment extends Fragment {
             public void focusChanged(final boolean hasFocus) {
                 // focus linking
                 final int activeAmountViewId = amountCalculatorLink.activeTextView().getId();
-                acceptBluetoothPaymentView.setNextFocusUpId(activeAmountViewId);
+                //acceptBluetoothPaymentView.setNextFocusUpId(activeAmountViewId);
             }
         });
 
@@ -290,7 +290,7 @@ public final class RequestCoinsFragment extends Fragment {
             boolean started = false;
             if (resultCode == Activity.RESULT_OK && bluetoothAdapter != null)
                 started = maybeStartBluetoothListening();
-            acceptBluetoothPaymentView.setChecked(started);
+            //acceptBluetoothPaymentView.setChecked(started);
         }
     }
 
