@@ -17,6 +17,8 @@
 
 package de.schildbach.wallet;
 
+import static android.app.PendingIntent.FLAG_IMMUTABLE;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -166,13 +168,13 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider {
         }
 
         views.setOnClickPendingIntent(R.id.widget_button_balance,
-                PendingIntent.getActivity(context, 0, new Intent(context, WalletActivity.class), 0));
+                PendingIntent.getActivity(context, 0, new Intent(context, WalletActivity.class), FLAG_IMMUTABLE));
         views.setOnClickPendingIntent(R.id.widget_button_request,
-                PendingIntent.getActivity(context, 0, new Intent(context, RequestCoinsActivity.class), 0));
+                PendingIntent.getActivity(context, 0, new Intent(context, RequestCoinsActivity.class), FLAG_IMMUTABLE));
         views.setOnClickPendingIntent(R.id.widget_button_send,
-                PendingIntent.getActivity(context, 0, new Intent(context, SendCoinsActivity.class), 0));
+                PendingIntent.getActivity(context, 0, new Intent(context, SendCoinsActivity.class), FLAG_IMMUTABLE));
         views.setOnClickPendingIntent(R.id.widget_button_send_qr,
-                PendingIntent.getActivity(context, 0, new Intent(context, SendCoinsQrActivity.class), 0));
+                PendingIntent.getActivity(context, 0, new Intent(context, SendCoinsQrActivity.class), FLAG_IMMUTABLE));
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

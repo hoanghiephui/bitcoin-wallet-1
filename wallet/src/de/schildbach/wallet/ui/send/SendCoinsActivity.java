@@ -105,8 +105,8 @@ public final class SendCoinsActivity extends AbstractWalletActivity {
     }
 
     @Override
-    public void onBackPressed() {
+    protected void onDestroy() {
         adMaxFullLoader.showAdsFull();
-        super.onBackPressed();
+        super.onDestroy();
     }
 }
