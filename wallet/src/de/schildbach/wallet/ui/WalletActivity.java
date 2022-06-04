@@ -75,7 +75,7 @@ import de.schildbach.wallet.util.OnFirstPreDraw;
 /**
  * @author Andreas Schildbach
  */
-public final class WalletActivity extends AbstractWalletActivity implements AdFullCallback {
+public final class WalletActivity extends AbstractWalletActivity {
     private WalletApplication application;
     private Configuration config;
 
@@ -90,7 +90,7 @@ public final class WalletActivity extends AbstractWalletActivity implements AdFu
     private WalletActivityViewModel viewModel;
 
     private static final int REQUEST_CODE_SCAN = 0;
-    private final AdMaxFullLoader adMaxFullLoader = new AdMaxFullLoader(this);
+    //private final AdMaxFullLoader adMaxFullLoader = new AdMaxFullLoader(this);
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -199,7 +199,7 @@ public final class WalletActivity extends AbstractWalletActivity implements AdFu
         final FragmentManager fragmentManager = getSupportFragmentManager();
         MaybeMaintenanceFragment.add(fragmentManager);
         AlertDialogsFragment.add(fragmentManager);
-        adMaxFullLoader.createInterstitialAd(this, BuildConfig.WALLET_HOME_FULL);
+        //adMaxFullLoader.createInterstitialAd(this, BuildConfig.WALLET_HOME_FULL);
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -490,7 +490,7 @@ public final class WalletActivity extends AbstractWalletActivity implements AdFu
         ScanActivity.startForResult(this, clickView, WalletActivity.REQUEST_CODE_SCAN);
     }
 
-    @Override
+    /*@Override
     public void onAdFullLoaded() {
         adMaxFullLoader.showAdsFull();
     }
@@ -508,7 +508,7 @@ public final class WalletActivity extends AbstractWalletActivity implements AdFu
     @Override
     public void onAdHide() {
 
-    }
+    }*/
 
     private static final class QuickReturnBehavior extends CoordinatorLayout.Behavior<View> {
         @Override
