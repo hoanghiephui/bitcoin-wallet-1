@@ -73,7 +73,11 @@ public class WalletBalanceWidgetProvider extends AppWidgetProvider {
                     exchangeRatesRepository.exchangeRateDao().findByCurrencyCode(config.getExchangeCurrencyCode()) : null;
             updateWidgets(context, appWidgetManager, appWidgetIds, balance, exchangeRate != null ?
                     exchangeRate.exchangeRate() : null);
-            result.finish();
+            try {
+                result.finish();
+            } catch (Exception ex) {
+
+            }
         });
     }
 

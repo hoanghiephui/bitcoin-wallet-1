@@ -141,7 +141,7 @@ public final class SettingsFragment extends PreferenceFragment implements OnPref
 
         updateTrustedPeer();
         updateOwnName();
-        updateBluetoothAddress();
+        //updateBluetoothAddress();
     }
 
     @Override
@@ -165,8 +165,7 @@ public final class SettingsFragment extends PreferenceFragment implements OnPref
                 updateTrustedPeer();
             else if (preference.equals(ownNamePreference))
                 updateOwnName();
-            else if (preference.equals(bluetoothAddressPreference))
-                updateBluetoothAddress();
+                //updateBluetoothAddress();
         });
         return true;
     }
