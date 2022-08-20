@@ -85,9 +85,9 @@
                 <data android:mimeType="application/x-btctx" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <meta-data
+            <!--<meta-data
                 android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
+                android:resource="@xml/shortcuts" />-->
         </activity-alias>
 
         <activity
@@ -219,7 +219,7 @@
                 android:resource="@xml/file_provider" />
         </provider>
 
-        <receiver
+        <!--<receiver
             android:name="de.schildbach.wallet.WalletBalanceWidgetProvider"
             android:exported="true"
             android:label="@string/appwidget_wallet_balance_title">
@@ -229,7 +229,7 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/wallet_balance_widget" />
-        </receiver>
+        </receiver>-->
 
         <service
             android:name="de.schildbach.wallet.service.StartBlockchainService"

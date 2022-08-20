@@ -52,7 +52,6 @@ import de.schildbach.wallet.Configuration;
 import de.schildbach.wallet.Constants;
 import de.schildbach.wallet.R;
 import de.schildbach.wallet.WalletApplication;
-import de.schildbach.wallet.WalletBalanceWidgetProvider;
 import de.schildbach.wallet.addressbook.AddressBookDao;
 import de.schildbach.wallet.addressbook.AddressBookDatabase;
 import de.schildbach.wallet.data.SelectedExchangeRateLiveData;
@@ -513,7 +512,7 @@ public class BlockchainService extends LifecycleService {
 
         broadcastPeerState(0);
 
-        final WalletBalanceLiveData walletBalance = new WalletBalanceLiveData(application);
+        /*final WalletBalanceLiveData walletBalance = new WalletBalanceLiveData(application);
         final SelectedExchangeRateLiveData exchangeRate = new SelectedExchangeRateLiveData(application);
         walletBalance.observe(this, balance -> {
             final ExchangeRateEntry rate = exchangeRate.getValue();
@@ -526,7 +525,7 @@ public class BlockchainService extends LifecycleService {
             if (balance != null)
                 WalletBalanceWidgetProvider.updateWidgets(BlockchainService.this, balance,
                         rate != null ? rate.exchangeRate() : null);
-        });
+        });*/
         wallet = new WalletLiveData(application);
         wallet.observe(this, new Observer<Wallet>() {
             @Override
