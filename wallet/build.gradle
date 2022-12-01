@@ -35,10 +35,10 @@ dependencies {
     api project(path: ':ads')
     api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    api 'com.applovin:applovin-sdk:11.4.3'
+    api 'com.applovin:applovin-sdk:11.5.5'
     api("com.squareup.picasso:picasso:2.71828")
-    api 'com.google.android.exoplayer:exoplayer:2.17.1'
-    api 'com.applovin.mediation:bytedance-adapter:4.5.0.3.0'
+    api 'com.google.android.exoplayer:exoplayer:2.18.2'
+    api 'com.applovin.mediation:bytedance-adapter:4.8.0.9.0'
 }
 
 ext {
