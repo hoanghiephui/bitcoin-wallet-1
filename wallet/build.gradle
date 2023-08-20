@@ -46,12 +46,12 @@ ext {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
     //buildToolsVersion '30.0.3'
 
     defaultConfig {
         minSdk 24
-        targetSdk 31
+        targetSdk 33
         dexOptions {
             preDexLibraries false
         }
@@ -74,6 +74,9 @@ android {
             dimension 'flavor'
         }
         wallet {
+            dimension 'flavor'
+        }
+        cold {
             dimension 'flavor'
         }
     }
